@@ -6,15 +6,19 @@ import System.Random
 -- Utility module for Maze module
 
 -- gets the first two elements as a pair from triplet
+getPairFromTriplet :: (a, b, c) -> (a, b)
 getPairFromTriplet (r, c, _) = (r, c)
 
 -- get first element in a triplet
+get1st :: (a, b, c) -> a
 get1st (x,_,_) = x
 
 -- get second element in a triplet
+get2nd :: (a, b, c) -> b
 get2nd (_,x,_) = x
 
 -- get third element in a triplet
+get3rd :: (a, b, c) -> c
 get3rd (_, _, x) = x
 
 -- creates an empty HashSet
@@ -46,6 +50,7 @@ getRandomNumPair generator = (firstRand, secondRand, nextGen)
 modRandomNumPair :: Int -> (Int, Int) -> (Int, Int)
 modRandomNumPair gridSize (r, c) = ((r `mod` gridSize) + 1, (c `mod` gridSize) + 1)
 
+-- Given the size of the list, get a random index
 getRandomIndex :: StdGen -> Int -> (Int, StdGen)
 getRandomIndex generator size = (modded, nextGen)
    where (randomNum, nextGen) = next generator

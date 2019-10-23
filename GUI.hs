@@ -29,11 +29,11 @@ playerPic r = color red (circleSolid r)
 
 -- offset is for moving the entire maze origin to bottom left corner from center
 offset :: Float
-offset = (fromIntegral height-20) / 2
+offset = (num height-20) / 2
 
 -- scale factor, i.e. the width/height of an individual box on the grid
 scaleFactor :: Float -> Float
-scaleFactor size = (fromIntegral height-20) / size
+scaleFactor size = (num height-20) / size
 
 -- Game defines the state of a game at any point
 data Game = Game
@@ -77,7 +77,7 @@ createWalls mazeWalls size =
   
 -- utility func to convert integer wall locations to floats 
 parseMazeWall :: (Integer, Integer, Char) -> (Float, Float, Char)
-parseMazeWall (x,y,dir) = (fromIntegral(x), fromIntegral(y), dir)
+parseMazeWall (x,y,dir) = (num (x), num (y), dir)
 
 -- places a wall in its correct place on the window coordinate frame
 parseWall :: Float -> (Float, Float, Char) -> Picture
@@ -91,6 +91,7 @@ parseWall size (x,y,dir)
          h = c * size
 
 -- keyboard input for game control
+-- handleInput consumes a key event and a game state, and returns the updated game state
 handleInput :: Event -> Game -> Game
 handleInput (EventKey (Char 'w') Down _ _) game
    | checkMove game 'U' = Game {
@@ -201,7 +202,7 @@ handleInput (EventKey (Char 'r') Down _ _) game =
 
 handleInput _ game = game
 
--- when the goal is reached, reset the player to initial state
+-- when the goal is reached, create a new maze with a different seed
 handleGoal :: Game -> Game
 handleGoal game =
   if (x2-unit) < x && x < (x2+unit) && (y2-unit) < y && y < (y2+unit) then newGame -- This resets the game state
@@ -231,10 +232,10 @@ createGUI maze size nextGen = do
 checkMove :: Game -> Char -> Bool
 checkMove game dir = not (findWall (findGridLocation (size game) (playerLoc game) dir) (mwd game))
 
--- converts coordinates to triplet
+-- converts screen coordinates to triplet representation of the wall
 findGridLocation :: Float -> (Float, Float) -> Char -> (Integer, Integer, Char)
 findGridLocation s (x,y) dir = 
-   (toInteger (ceiling (s-(fromIntegral (div (toInteger (ceiling (mul*(o+y)))) c)))), 1+(div (toInteger (ceiling (mul*(o+x)))) c), dir)
+   (toInteger (ceiling (s-(num (div (toInteger (ceiling (mul*(o+y)))) c)))), 1+(div (toInteger (ceiling (mul*(o+x)))) c), dir)
       where
       mul = 100000
       o = offset
